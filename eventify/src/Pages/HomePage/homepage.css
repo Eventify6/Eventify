@@ -1,0 +1,60 @@
+.title {
+    color: red;
+}
+
+/* About Us Section */
+.about-section {
+    width: 100%;
+    background: #eaeade;
+    padding: 60px 0 40px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.about-cards {
+    display: flex;
+    gap: 32px;
+    max-width: 900px;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.about-card {
+    background: whitesmoke;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(28, 79, 51, 0.08);
+    padding: 32px 28px;
+    flex: 1 1 320px;
+    min-width: 280px;
+    max-width: 400px;
+    color: #1c4f33;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 12px 0;
+}
+
+.about-card h2 {
+    color: #1c4f33;
+    margin-bottom: 16px;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.about-card p,
+.about-card ul {
+    color: #1c4f33;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.about-card ul {
+    padding-left: 20px;
+    margin-bottom: 12px;
+}
+
+.about-card li {
+    margin-bottom: 6px;
+    font-weight: 500;
+}

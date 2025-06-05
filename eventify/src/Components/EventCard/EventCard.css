@@ -1,0 +1,70 @@
+.event-card {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    color: black;
+}
+
+.event-card>div:first-child {
+    position: relative;
+}
+
+.event-card img {
+    width: 100%;
+    object-fit: cover;
+    display: block;
+    height: 350px;
+}
+
+.event-card-category {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    background: #1976d2;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.event-card>div:last-child {
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 20px;
+}
+
+.event-card-details {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.event-card-location-price {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.event-card-location {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.event-card-price {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.event-card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+
+}

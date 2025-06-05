@@ -1,0 +1,286 @@
+/* General Styles */
+.event-details-page-container {
+    padding: 48px;
+    background-color: white;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+.event-details-page-container h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--main-color);
+    margin-bottom: 24px;
+    text-align: start;
+}
+
+.event-details-page-container p {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.event-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2ecc71;
+}
+
+.event-category {
+    font-size: 1.2rem;
+    background: var(--main-color);
+    color: #fff;
+    border-radius: 16px;
+    padding: 4px 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    font-weight: 600;
+    display: inline-block;
+}
+
+.event-details-page-container-header {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 48px;
+    margin-bottom: 48px;
+}
+
+.event-details-page-container-header img {
+    width: 100%;
+    border-radius: 8px;
+    flex: 2;
+}
+
+.event-details-page-container-header-info {
+    flex: 3;
+}
+
+.event-details-page-container-header-info-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.event-details-page-container-header-info-description {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.hours-section-title {
+    color: grey;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.hours-section-details {
+    color: #222;
+    font-size: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-left: 2px;
+}
+
+/* Social Media Links */
+.event-social-links a {
+    margin-right: 10px;
+    display: inline-block;
+    font-size: 24px;
+}
+
+.event-social-links a:hover {
+    color: #3498db;
+}
+
+.event-social-links a:focus {
+    outline: none;
+}
+
+.event-social-links a {
+    transition: color 0.3s ease;
+}
+
+/* Swiper Section */
+.swiper-container {
+    margin: 40px 0;
+}
+
+.swiper-container img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+/* Button Styling */
+button {
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background-color: #1c4f33;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #16a085;
+}
+
+button:focus {
+    outline: none;
+}
+
+/* Modal Styling */
+.MuiDialog-paper {
+    border-radius: 22px !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+    box-shadow: 0 8px 40px 0 rgba(28, 79, 51, 0.22), 0 1.5px 8px 0 rgba(28, 79, 51, 0.08) !important;
+    backdrop-filter: blur(12px) saturate(1.3);
+    padding: 0 !important;
+    max-width: 420px;
+    width: 95vw;
+    margin: 0 auto;
+}
+
+.MuiDialogTitle-root {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    color: #1c4f33 !important;
+    padding: 32px 32px 0 32px !important;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.MuiDialogContent-root {
+    padding: 28px 32px 12px 32px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    overflow-x: hidden;
+}
+
+.MuiDialogActions-root {
+    padding: 24px 32px 32px 32px !important;
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+}
+
+/* Modal Success Content */
+.success-popup-content {
+    background: rgba(245, 255, 250, 0.95);
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(28, 79, 51, 0.08);
+    padding: 20px 18px 18px 18px;
+    margin-bottom: 8px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.success-popup-content .MuiTypography-subtitle1 {
+    font-size: 1.13rem;
+    font-weight: 500;
+    color: #1c4f33;
+}
+
+.success-popup-content .MuiTypography-h6 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0e2d1b;
+}
+
+.success-popup-content .MuiTypography-subtitle2 {
+    font-size: 1.05rem;
+    color: #2e7d32;
+    font-weight: 500;
+}
+
+.MuiDialogContent-root .MuiTypography-root {
+    text-align: center;
+    width: 100%;
+}
+
+/* Input Field Styles for Modal */
+.create-event-form-container .MuiInputBase-root,
+.create-event-form-container .MuiOutlinedInput-root {
+    border-radius: 12px;
+    background: #ffffff;
+    padding: 12px;
+    font-size: 1rem;
+    border: 0;
+    color: #1c4f33;
+    transition: box-shadow 0.3s ease;
+}
+
+.create-event-form-container .MuiInputBase-root.Mui-focused,
+.create-event-form-container .MuiOutlinedInput-root.Mui-focused {
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.18);
+}
+
+.create-event-form-container .MuiInputBase-root:hover,
+.create-event-form-container .MuiOutlinedInput-root:hover {
+    box-shadow: 0 0 0 4px rgba(28, 79, 51, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .event-details-page-container {
+        padding: 16px;
+    }
+
+    .event-details-page-container-header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .event-details-page-container-header-info {
+        margin-top: 24px;
+    }
+
+    .event-details-page-container-header-info-title-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .event-details-page-container-header img {
+        width: 100%;
+        margin-bottom: 24px;
+    }
+
+    .event-social-links {
+        margin-top: 20px;
+    }
+
+    .swiper-container img {
+        width: 100%;
+    }
+
+    .MuiDialog-paper {
+        max-width: 95vw;
+        padding: 16px !important;
+    }
+
+    .MuiDialogTitle-root,
+    .MuiDialogContent-root,
+    .MuiDialogActions-root {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    .MuiDialogTitle-root {
+        font-size: 1.5rem !important;
+    }
+
+    .MuiDialogContent-root {
+        padding-top: 18px !important;
+        padding-bottom: 8px !important;
+    }
+
+    .MuiDialogActions-root {
+        padding-bottom: 18px !important;
+        padding-top: 12px !important;
+    }
+}

@@ -1,0 +1,271 @@
+/* Background and container */
+.create-event-form-bg {
+    min-height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    background: linear-gradient(135deg, #1c4f33 0%, #eaeade 100%);
+}
+
+h2 {
+    color: #1c4f33;
+}
+
+.create-event-form-container {
+    max-width: 800px;
+    /* Increased form width */
+    margin: 56px auto;
+    padding: 40px;
+    background: rgba(234, 234, 222, 0.97);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(28, 79, 51, 0.18);
+    border: 1px solid rgba(28, 79, 51, 0.13);
+    backdrop-filter: blur(8px) saturate(1.2);
+    transition: box-shadow 0.35s cubic-bezier(.4, 2, .6, 1);
+    font-family: 'Arial', sans-serif;
+}
+
+/* Inputs with no borders and box-shadow on active */
+.create-event-form-container .MuiInputBase-root,
+.create-event-form-container .MuiOutlinedInput-root {
+    border-radius: 12px;
+    background: #ffffff;
+    /* No border by default */
+    padding: 12px;
+    font-size: 1rem;
+    border: 0;
+    color: #1c4f33;
+    /* Green hint for text */
+    transition: box-shadow 0.3s ease;
+}
+
+.create-event-form-container .MuiInputBase-root.Mui-focused,
+.create-event-form-container .MuiOutlinedInput-root.Mui-focused {
+    background: #fff;
+    /* Primary shadow effect when active/focused */
+    box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.18);
+}
+
+.create-event-form-container .MuiInputBase-root:hover,
+.create-event-form-container .MuiOutlinedInput-root:hover {
+    /* On hover, a subtle shadow or effect */
+    box-shadow: 0 0 0 4px rgba(28, 79, 51, 0.1);
+}
+
+.date-picker-group {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+/* Date Picker Styling */
+.date-picker-group .form-control {
+
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    border: 1.5px solid #eaeade;
+    /* Light border for date picker */
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(28, 79, 51, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    color: #1c4f33;
+}
+
+.date-picker-group .form-control:focus {
+    background: #fff;
+    /* Removed border, keep only shadow */
+    box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.18);
+}
+
+/* Button Styling */
+.create-event-form-container .MuiButton-root {
+    background: #1c4f33;
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 16px;
+    padding: 12px 18px;
+    width: 100%;
+    /* Full width for button */
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(28, 79, 51, 0.2);
+}
+
+.create-event-form-container .MuiButton-root:hover {
+    background-color: #1c4f33 !important;
+    color: whitesmoke !important;
+    box-shadow: 0 4px 16px rgba(28, 79, 51, 0.15) !important;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s !important;
+}
+
+.create-event-form-container .MuiButton-root:disabled {
+    opacity: 0.7;
+    color: whitesmoke;
+}
+
+/* Form Label */
+.create-event-form-container .MuiFormLabel-root {
+    font-weight: 600;
+    color: #1c4f33;
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+}
+
+/* Checkbox */
+.create-event-form-container .MuiCheckbox-root {
+    color: #1c4f33 !important;
+}
+
+.create-event-form-container .MuiCheckbox-root.Mui-checked {
+    color: #1c4f33 !important;
+}
+
+/* Error Message */
+.create-event-form-container .validation-error {
+    color: #d32f2f;
+    font-size: 0.9rem;
+    margin-top: 6px;
+    margin-bottom: -12px;
+    font-weight: 500;
+}
+
+/* Social Links Section */
+.social-links-optional {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.social-links-optional .MuiTextField-root {
+    background: #f7f7ca;
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .create-event-form-container {
+        padding: 16px;
+        max-width: 98vw;
+    }
+
+    .form-grid {
+        row-gap: 18px;
+    }
+
+    .create-event-form-container .MuiButton-root {
+        width: auto;
+    }
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 20px;
+    width: 100%;
+}
+
+/* --- MODERN MODAL STYLES --- */
+.MuiDialog-paper {
+    border-radius: 22px !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+    box-shadow: 0 8px 40px 0 rgba(28, 79, 51, 0.22), 0 1.5px 8px 0 rgba(28, 79, 51, 0.08) !important;
+    backdrop-filter: blur(12px) saturate(1.3);
+    padding: 0 !important;
+    max-width: 420px;
+    width: 95vw;
+    margin: 0 auto;
+}
+
+.MuiDialogTitle-root {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    color: #1c4f33 !important;
+    padding: 32px 32px 0 32px !important;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.MuiDialogContent-root {
+    padding: 28px 32px 12px 32px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    overflow-x: hidden;
+}
+
+.MuiDialogActions-root {
+    padding: 24px 32px 32px 32px !important;
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+}
+
+.success-popup-content {
+    background: rgba(245, 255, 250, 0.95);
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(28, 79, 51, 0.08);
+    padding: 20px 18px 18px 18px;
+    margin-bottom: 8px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.success-popup-content .MuiTypography-subtitle1 {
+    font-size: 1.13rem;
+    font-weight: 500;
+    color: #1c4f33;
+}
+
+.success-popup-content .MuiTypography-h6 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0e2d1b;
+}
+
+.success-popup-content .MuiTypography-subtitle2 {
+    font-size: 1.05rem;
+    color: #2e7d32;
+    font-weight: 500;
+}
+
+.MuiDialogContent-root .MuiTypography-root {
+    text-align: center;
+    width: 100%;
+}
+
+@media (max-width: 600px) {
+    .MuiDialog-paper {
+        max-width: 98vw;
+        padding: 0 !important;
+    }
+
+    .MuiDialogTitle-root,
+    .MuiDialogContent-root,
+    .MuiDialogActions-root {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    .MuiDialogTitle-root {
+        font-size: 1.3rem !important;
+    }
+
+    .MuiDialogContent-root {
+        padding-top: 18px !important;
+        padding-bottom: 8px !important;
+    }
+
+    .MuiDialogActions-root {
+        padding-bottom: 18px !important;
+        padding-top: 12px !important;
+    }
+}

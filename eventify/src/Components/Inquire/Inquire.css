@@ -1,0 +1,134 @@
+.inquire-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #eaeade;
+    padding: 40px 0 30px 0;
+    animation: fadeIn 1.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.inquire-form {
+    background: whitesmoke;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(28, 79, 51, 0.08);
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 320px;
+    max-width: 400px;
+    width: 100%;
+    gap: 16px;
+}
+
+.inquire-title {
+    color: #1c4f33;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.input-group {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+}
+
+.inquire-input {
+    flex: 1;
+    padding: 12px 18px;
+    border-radius: 24px;
+    border: 2px solid #cfd8dc;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background: #f7f7f2;
+    color: #1c4f33;
+    box-shadow: 0 2px 8px rgba(28, 79, 51, 0.04);
+}
+
+.inquire-input:focus {
+    border-color: #1c4f33;
+    box-shadow: 0 4px 16px rgba(28, 79, 51, 0.12);
+}
+
+.inquire-input.invalid {
+    border-color: #e57373;
+    background: #fff0f0;
+}
+
+.inquire-btn {
+    padding: 12px 24px;
+    border-radius: 24px;
+    background-color: #1c4f33;
+    color: whitesmoke;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    min-width: 110px;
+    transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+    box-shadow: 0 2px 8px rgba(28, 79, 51, 0.08);
+}
+
+.inquire-btn:disabled {
+    background: #b0b0a8;
+    color: #f7f7f2;
+    cursor: not-allowed;
+}
+
+.inquire-btn:hover:not(:disabled) {
+    background: #2e7d5a;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(28, 79, 51, 0.15);
+}
+
+.error-msg {
+    color: #e57373;
+    font-size: 0.95rem;
+    margin-top: 4px;
+    animation: shake 0.3s;
+}
+
+.success-msg {
+    color: #388e3c;
+    font-size: 0.95rem;
+    margin-top: 4px;
+    animation: fadeIn 0.7s;
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+
+    75% {
+        transform: translateX(-5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}

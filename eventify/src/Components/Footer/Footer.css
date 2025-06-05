@@ -1,0 +1,59 @@
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #1c4f33;
+    color: #fff;
+    position: relative;
+    min-height: 60px;
+}
+
+.footer-left {
+    flex: 1;
+}
+
+.footer-brand {
+    color: #eaeade;
+    font-weight: 800;
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+}
+
+.footer-center {
+    flex: 1;
+    text-align: center;
+}
+
+.footer-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.footer-icon {
+    font-size: 1.7rem;
+    transition: transform 0.2s;
+}
+
+.footer-icon:hover {
+    transform: scale(1.15);
+}
+
+.footer-icon.facebook {
+    color: #1877f3;
+}
+
+.footer-icon.whatsapp {
+    color: #25d366;
+}
+
+.footer-icon.instagram {
+    color: #e4405f;
+}
+
+.copyright {
+    font-size: 1rem;
+    opacity: 0.8;
+}

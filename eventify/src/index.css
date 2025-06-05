@@ -1,0 +1,16 @@
+:root {
+    --main-color: #1c4f33;
+}
+
+html {
+    font-family: 'Poppins', sans-serif;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    background-color: white;
+    padding: 0;
+
+}
