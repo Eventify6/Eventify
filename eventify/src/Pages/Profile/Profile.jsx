@@ -25,13 +25,12 @@ const localizer = dateFnsLocalizer({
 
 const PRIMARY_COLOR = '#1c4f33';
 
-// Dummy events for demonstration
 const dummyEvents = [
     {
         id: 1,
         title: 'Masar Egbary Live',
-        start: new Date('2024-07-01T19:00'),
-        end: new Date('2024-07-01T22:00'),
+        start: new Date('2025-02-01T19:00'),
+        end: new Date('2025-02-01T22:00'),
         allDay: false,
         color: PRIMARY_COLOR,
         location: 'Cairo Opera House',
@@ -40,33 +39,13 @@ const dummyEvents = [
     {
         id: 2,
         title: 'Omar Khairat Concert',
-        start: new Date('2024-07-10T20:00'),
-        end: new Date('2024-07-10T23:00'),
+        start: new Date('2025-02-10T20:00'),
+        end: new Date('2025-02-10T23:00'),
         allDay: false,
         color: '#256943',
         location: 'Alexandria Library',
         description: 'A magical night with Omar Khairat. Classical music at its best.',
-    },
-    {
-        id: 3,
-        title: 'AI Workshop',
-        start: new Date('2024-07-05T10:00'),
-        end: new Date('2024-07-05T13:00'),
-        allDay: false,
-        color: '#eaeade',
-        location: 'AUC New Cairo',
-        description: 'Hands-on workshop on Artificial Intelligence.',
-    },
-    {
-        id: 4,
-        title: 'Trips to Fayoum',
-        start: new Date('2024-07-12T07:00'),
-        end: new Date('2024-07-12T19:00'),
-        allDay: false,
-        color: '#f7b32b',
-        location: 'Fayoum',
-        description: 'A day trip to Fayoum for adventure and fun.',
-    },
+    }
 ];
 
 function getUserFromCookie() {
@@ -79,7 +58,6 @@ function getUserFromCookie() {
     }
 }
 
-// Custom Toolbar for Calendar
 function CustomToolbar({ label, onNavigate }) {
     return (
         <div className="rbc-toolbar-custom">
@@ -119,36 +97,34 @@ export default function Profile() {
         }
     };
 
-    // Custom month header to show only weekday name
-    function CustomMonthHeader({ date }) {
-        return (
-            <div style={{ textAlign: 'center', fontWeight: 700 }}>
-                {format(date, 'EEE')}
-            </div>
-        );
-    }
-
-    // Custom date cell wrapper to show day number and event name, with background color if event exists
     function CustomDateCellWrapper({ value, children }) {
-        // Find event for this day
-        const event = events.find(
-            (e) =>
-                e.start.getFullYear() === value.getFullYear() &&
-                e.start.getMonth() === value.getMonth() &&
-                e.start.getDate() === value.getDate()
+        const hasEvent = events.some(e =>
+            e.start.getFullYear() === value.getFullYear() &&
+            e.start.getMonth() === value.getMonth() &&
+            e.start.getDate() === value.getDate()
         );
-        const bgColor = event ? event.color : undefined;
+
+        const event = events.find(e =>
+            e.start.getFullYear() === value.getFullYear() &&
+            e.start.getMonth() === value.getMonth() &&
+            e.start.getDate() === value.getDate()
+        );
+
         return (
-            <div style={{ background: bgColor || undefined, minHeight: 60, padding: 4 }}>
-                <div style={{ fontWeight: 600 }}>{value.getDate()}</div>
-                {event && <div>{event.title}</div>}
+            <div className={`custom-date-cell ${hasEvent ? 'has-event' : ''}`}>
+                <div className="date-number">{value.getDate()}</div>
+                {hasEvent && (
+                    <div className="event-indicator">
+                        {event?.title}
+                    </div>
+                )}
+                {children}
             </div>
         );
     }
 
     return (
         <div className="profile-main-layout">
-            {/* Left: User Info */}
             <div className="profile-user-info">
                 <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
                     <Avatar sx={{ bgcolor: '#1c4f33', width: 64, height: 64, fontSize: 32 }}>
@@ -160,45 +136,35 @@ export default function Profile() {
                     <Typography variant="body1" color="#256943" fontWeight={500}>
                         {user?.email || 'user@email.com'}
                     </Typography>
-                    <Typography variant="body1" color="#256943" fontWeight={500}>
-                        {user?.phone || '+20 100 000 0000'}
-                    </Typography>
-                    <Chip
-                        label={user?.userType === 'admin' ? 'Host' : 'Attendee'}
-                        color={user?.userType === 'admin' ? 'primary' : 'success'}
-                        sx={{ fontWeight: 700, fontSize: 16, px: 2, py: 1, borderRadius: 2, background: user?.userType === 'admin' ? '#1c4f33' : '#256943', color: '#fff' }}
-                    />
                 </Box>
             </div>
-            {/* Right: Tabs and Calendar */}
+
             <div className="profile-tabs-section">
                 <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 2 }}>
                     <Tab label="Upcoming Events" sx={{ fontWeight: 700, fontSize: 18, color: '#1c4f33' }} />
                 </Tabs>
+
                 {tab === 0 && (
                     <div className="profile-calendar-tab">
                         <Calendar
                             localizer={localizer}
-                            events={events}
+                            // events={events}
                             startAccessor="start"
                             endAccessor="end"
-                            style={{ height: '70vh', width: '100%' }}
-                            onSelectEvent={onSelectEvent}
-                            popup
+                            style={{ height: '100%' }}
+                            // onSelectEvent={onSelectEvent}
                             views={['month']}
                             components={{
-                                event: undefined, // default event rendering
                                 toolbar: CustomToolbar,
                                 month: {
-                                    header: CustomMonthHeader,
-                                    dateCellWrapper: CustomDateCellWrapper,
-                                },
+                                    dateCellWrapper: CustomDateCellWrapper
+                                }
                             }}
                         />
                     </div>
                 )}
             </div>
-            {/* Event Details Dialog */}
+
             <Dialog open={!!selectedEvent} onClose={handleCloseDialog} maxWidth="xs" fullWidth>
                 <DialogTitle sx={{ background: selectedEvent?.color || '#1c4f33', color: '#fff', fontWeight: 700 }}>
                     {selectedEvent?.title}
@@ -210,25 +176,17 @@ export default function Profile() {
                     <Typography variant="body2" color="#256943" mb={2}>
                         {selectedEvent?.description}
                     </Typography>
-                    <Typography variant="body2" color="#1c4f33">
-                        <strong>Start:</strong> {selectedEvent?.start && format(selectedEvent.start, 'PPpp')}
-                    </Typography>
-                    <Typography variant="body2" color="#1c4f33">
-                        <strong>End:</strong> {selectedEvent?.end && format(selectedEvent.end, 'PPpp')}
-                    </Typography>
                 </DialogContent>
                 <DialogActions sx={{ justifyContent: 'center', pb: 2 }}>
                     <Button
                         variant="contained"
-                        sx={{ background: selectedEvent?.color || '#1c4f33', color: '#fff', borderRadius: 2, px: 4, py: 1.5, fontWeight: 600, fontSize: 16 }}
+                        sx={{ background: selectedEvent?.color || '#1c4f33', color: '#fff' }}
                         onClick={handleViewDetails}
                     >
                         View Event Details
                     </Button>
-                    <Button onClick={handleCloseDialog} color="primary">Close</Button>
                 </DialogActions>
             </Dialog>
         </div>
     );
 }
-

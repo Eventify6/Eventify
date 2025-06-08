@@ -31,13 +31,14 @@
     border-radius: 18px;
     box-shadow: 0 8px 32px rgba(28, 79, 51, 0.13);
     margin-right: 48px;
-    padding: 32px 32px 32px 32px;
+    padding: 32px;
     min-width: 0;
     display: flex;
     flex-direction: column;
     height: fit-content;
 }
 
+/* Calendar Styles */
 .profile-calendar-tab {
     width: 100%;
     height: 100%;
@@ -46,10 +47,65 @@
 .rbc-calendar {
     background: #fff;
     border-radius: 18px;
-    box-shadow: 0 8px 32px rgba(28, 79, 51, 0.12);
     padding: 16px;
 }
 
+.rbc-month-view {
+    border: none;
+    height: auto !important;
+}
+
+.rbc-month-row {
+    min-height: 80px !important;
+    overflow: visible;
+}
+
+.rbc-header {
+    padding: 4px;
+    font-weight: 600;
+    color: #1c4f33;
+    border: none !important;
+    font-size: 12px;
+}
+
+.rbc-date-cell {
+    padding: 2px;
+    text-align: center;
+}
+
+.rbc-off-range {
+    visibility: hidden;
+}
+
+.rbc-off-range-bg {
+    background: transparent;
+}
+
+/* Custom Date Cell */
+.custom-date-cell {
+    height: 100%;
+    padding: 2px;
+    border-radius: 4px;
+}
+
+.custom-date-cell.has-event {
+    background-color: rgba(28, 79, 51, 0.1);
+}
+
+.date-number {
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.event-indicator {
+    font-size: 10px;
+    line-height: 1.2;
+    white-space: normal;
+    word-break: break-word;
+    color: #1c4f33;
+}
+
+/* Toolbar */
 .rbc-toolbar-custom {
     display: flex;
     align-items: center;
@@ -59,58 +115,37 @@
     position: relative;
 }
 
-.rbc-btn-prev {
+.rbc-toolbar-label-custom {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1c4f33;
+}
+
+.rbc-btn-prev,
+.rbc-btn-next {
     position: absolute;
-    left: 0;
     top: 50%;
     transform: translateY(-50%);
     background: #eaeade !important;
     color: #1c4f33 !important;
     border-radius: 50%;
     z-index: 2;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rbc-btn-prev {
+    left: 0;
 }
 
 .rbc-btn-next {
-    position: absolute;
     right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #eaeade !important;
-    color: #1c4f33 !important;
-    border-radius: 50%;
-    z-index: 2;
 }
 
-.calendar-event-content {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.event-color-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 4px;
-    border: 2px solid #fff;
-    box-shadow: 0 0 0 2px #eaeade;
-}
-
-.event-title {
-    white-space: normal;
-    word-break: break-word;
-    color: inherit;
-}
-
-/* Dialog styles for event details */
-.MuiDialog-paper {
-    border-radius: 18px !important;
-    box-shadow: 0 8px 32px rgba(28, 79, 51, 0.18) !important;
-}
-
+/* Responsive */
 @media (max-width: 900px) {
     .profile-main-layout {
         flex-direction: column;
@@ -123,5 +158,13 @@
         margin: 0 16px;
         padding: 24px 12px;
         max-width: 100%;
+    }
+
+    .rbc-month-row {
+        min-height: 60px;
+    }
+
+    .event-indicator {
+        font-size: 8px;
     }
 }
