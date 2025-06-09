@@ -32,6 +32,9 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import './CreateEventForm.css';
 import { Events } from '../../Data/Enums';
 import { SocialMediaBoostOptions } from '../../Data/Enums';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { getCookie } from '../../utils/cookieUtils';
 
 const schema = yup.object().shape({
     eventName: yup.string().required('Event Name is required'),
@@ -57,6 +60,11 @@ const schema = yup.object().shape({
         otherwise: (schema) => schema.notRequired(),
     }),
     isPrivate: yup.boolean().required('Please select public or private'),
+    privateCode: yup.string().when('isPrivate', {
+        is: true,
+        then: (schema) => schema.required('Private code is required'),
+        otherwise: (schema) => schema.notRequired(),
+    }),
     schedule: yup.mixed().required('Schedule PDF is required'),
     agreement: yup.bool().oneOf([true], 'You must agree to terms'),
     price: yup.number().when('isCharged', {
@@ -72,11 +80,17 @@ function generateCode() {
 
 export default function CreateEventForm() {
     const [code, setCode] = useState('');
-    const [openSuccessPopup, setOpenSuccessPopup] = useState(false); // State for success popup
-    const [openPaymentDialog, setOpenPaymentDialog] = useState(false); // State for payment confirmation dialog
-    const [submittedData, setSubmittedData] = useState(null); // Store submitted data for dialogs
-
+    const [openSuccessPopup, setOpenSuccessPopup] = useState(false);
+    const [openPaymentDialog, setOpenPaymentDialog] = useState(false);
+    const [submittedData, setSubmittedData] = useState(null);
+    const user = getCookie('userData');
     const BASE_PRICE = 5000;
+
+    const generatePrivateCode = () => {
+        const newCode = generateCode();
+        setCode(newCode);
+        setValue('privateCode', newCode, { shouldValidate: true });
+    };
 
     const {
         control,
@@ -101,6 +115,7 @@ export default function CreateEventForm() {
             isAttendeeLimit: false,
             attendeeLimit: 0,
             isPrivate: false,
+            privateCode: '',
             socialMediaBoost: [],
             schedule: null,
             previousImages: null,
@@ -116,17 +131,18 @@ export default function CreateEventForm() {
     const isAttendeeLimit = watch('isAttendeeLimit');
     const isPrivate = watch('isPrivate');
     const selectedSocialMedia = watch('socialMediaBoost');
-    const watchedValues = watch(); // Watch all form values
+    const watchedValues = watch();
     const selectedOptions = SocialMediaBoostOptions.filter(opt => selectedSocialMedia.includes(opt.value));
     const socialMediaTotal = selectedOptions.reduce((sum, opt) => sum + opt.price, 0);
     const totalPrice = BASE_PRICE + socialMediaTotal;
 
-    // Log all form changes
     useEffect(() => {
-        console.log(watchedValues);
+        console.log("Form values:", watchedValues);
     }, [watchedValues]);
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
+        console.log("Submitting form data:", data);
+        setSubmittedData(data);
         const invoice = {
             base: BASE_PRICE,
             socialMedia: selectedOptions.map(opt => ({ label: opt.label, price: opt.price })),
@@ -134,6 +150,66 @@ export default function CreateEventForm() {
         };
         setSubmittedData({ ...data, invoice });
         setOpenSuccessPopup(true);
+    };
+
+    const handleConfirmPayment = async () => {
+        try {
+            const formData = new FormData();
+            
+            // Append all non-file fields directly to FormData
+            Object.keys(submittedData).forEach(key => {
+                if (key !== 'eventImage' && key !== 'schedule' && key !== 'instapay' && key !== 'previousImages' && key !== 'invoice') {
+                    // Convert boolean values to strings
+                    if (typeof submittedData[key] === 'boolean') {
+                        formData.append(key, submittedData[key] ? 'true' : 'false');
+                    } else if (Array.isArray(submittedData[key])) {
+                        formData.append(key, JSON.stringify(submittedData[key]));
+                    } else if (submittedData[key] !== null && submittedData[key] !== undefined) {
+                        formData.append(key, submittedData[key]);
+                    }
+                }
+            });
+
+            // Append files
+            if (submittedData.eventImage) {
+                formData.append('eventImage', submittedData.eventImage);
+            }
+            if (submittedData.schedule) {
+                formData.append('schedule', submittedData.schedule);
+            }
+            if (submittedData.isCharged && submittedData.instapay) {
+                formData.append('instapay', submittedData.instapay);
+            }
+            if (submittedData.previousImages) {
+                // Handle previousImages as a FileList
+                if (submittedData.previousImages instanceof FileList) {
+                    Array.from(submittedData.previousImages).forEach(file => {
+                        formData.append('previousImages', file);
+                    });
+                } else {
+                    formData.append('previousImages', submittedData.previousImages);
+                }
+            }
+
+            formData.append('user', user);
+
+            const response = await fetch('http://localhost:5000/api/events/create', {
+                method: 'POST',
+                body: formData
+            });
+
+            const responseData = await response.json();
+
+            if (response.ok) {
+                toast.success('Event created successfully!');
+                setOpenPaymentDialog(false);
+            } else {
+                toast.error(responseData.error || 'Failed to create event');
+            }
+        } catch (error) {
+            console.error('Error creating event:', error);
+            toast.error('Something went wrong. Please try again.');
+        }
     };
 
     const handleClosePopup = () => {
@@ -147,17 +223,14 @@ export default function CreateEventForm() {
 
     const handleCancelPayment = () => {
         setOpenPaymentDialog(false);
-    };
-
-    const handleConfirmPayment = () => {
-        setOpenPaymentDialog(false);
-        alert('Event created');
+        setSubmittedData(null);
     };
 
     return (
         <>
             <div className="create-event-form-bg" />
             <Paper elevation={4} className="create-event-form-container">
+                <ToastContainer position="top-center" autoClose={3000} />
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="form-grid">
                         <h2>Create Event</h2>
@@ -395,6 +468,34 @@ export default function CreateEventForm() {
                             </FormControl>
                         </div>
 
+                        {/* Private Code Input (if isPrivate is true) */}
+                        
+                        {isPrivate && (
+                            <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                                <Controller
+                                    name="privateCode"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            label="Private Code"
+                                            fullWidth
+                                            error={!!errors.privateCode}
+                                            helperText={errors.privateCode?.message}
+                                            
+                                        />
+                                    )}
+                                />
+                                <Button
+                                    variant="contained"
+                                    onClick={generatePrivateCode}
+                                    sx={{ minWidth: '120px' }}
+                                >
+                                    Generate
+                                </Button>
+                            </div>
+                        )}
+
                         {/* Social Media Boost (Checkbox group) */}
                         <div>
                             <FormControl component="fieldset" error={!!errors.socialMediaBoost} fullWidth>
@@ -464,7 +565,8 @@ export default function CreateEventForm() {
                                     <input
                                         type="file"
                                         accept="image/*"
-                                        onChange={(e) => field.onChange(e.target.files[0])}
+                                        multiple
+                                        onChange={(e) => field.onChange(e.target.files)}
                                         style={{ display: 'none' }}
                                         id="previousImagesInput"
                                     />
@@ -472,7 +574,7 @@ export default function CreateEventForm() {
                             />
                             <label htmlFor="previousImagesInput">
                                 <Button variant="outlined" component="span" fullWidth startIcon={<FileUploadIcon />}>
-                                    {getValues('previousImages') ? getValues('previousImages').name : 'Upload Previous Event Images (optional)'}
+                                    {getValues('previousImages') ? `${getValues('previousImages').length} files selected` : 'Upload Previous Event Images (optional)'}
                                 </Button>
                             </label>
                         </div>

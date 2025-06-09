@@ -1,6 +1,7 @@
 import React from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useNavigate } from 'react-router-dom';
 
 // Import Swiper 
 import 'swiper/css';
@@ -17,14 +18,24 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function EventsSlider() {
     const [eventCode, setEventCode] = useState('');
+    const navigate = useNavigate();
 
-    const handleJoin = () => {
+    const handleJoin = async () => {
         if (!eventCode.trim()) {
             toast.error('Event code cannot be empty.');
             return;
         }
 
-        toast.success('Joined event successfully!');
+        try {
+            const response = await fetch(`http://localhost:5000/api/events/get/${eventCode}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch event');
+            }
+            const data = await response.json();
+            navigate(`/events/${data.event.id}`);
+        } catch (error) {
+            toast.error(error.message || 'Failed to join event');
+        }
     };
 
     return (

@@ -20,43 +20,94 @@ function getUserFromCookie() {
     catch { return null; }
 }
 
-const dummyEvents = [
-    {
-        id: 1,
-        title: 'Visit Egyptian Museum',
-        start: '2025-06-10T09:00:00',
-        end: '2025-06-10T11:30:00',
-        location: 'Cairo Museum'
-    },
-    {
-        id: 2,
-        title: 'Pyramid Tour',
-        start: new Date(2025, 5, 15, 14, 0),
-        end: new Date(2025, 5, 15, 17, 30),
-        location: 'Giza Plateau'
-    },
-    {
-        id: 3,
-        title: 'Nile Dinner Cruise',
-        start: '2025-06-20T19:00:00',
-        end: '2025-06-20T21:00:00',
-        location: 'Nile River'
-    },
-];
-
 export default function Profile() {
     const [events, setEvents] = useState([]);
+    const [hostedEvents, setHostedEvents] = useState([]);
     const [tab, setTab] = useState(0);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
+    console.log(user);
+    const userData = getCookie('userData');
+
+    const fetchRegisteredEvents = async (userId) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/events/ticket/getByUserId/${userId}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch registered events');
+            }
+            const data = await response.json();
+            console.log('Fetched registered events:', data);
+
+            return data.events.map(event => ({
+                id: event.id,
+                title: event.eventName,
+                start: new Date(event.startDate),
+                end: new Date(event.endDate),
+                location: event.location,
+                attendees: [] // Will be populated when clicked for hosts
+            }));
+        } catch (error) {
+            console.error('Error fetching registered events:', error);
+            return [];
+        }
+    };
+
+    const fetchHostedEvents = async (organizerId) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/events/getByOrganizerId/${organizerId}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch hosted events');
+            }
+            const data = await response.json();
+            console.log('Fetched hosted events:', data);
+
+            return data.events.map(event => ({
+                id: event.id,
+                title: event.eventName,
+                startDate: new Date(event.startDate),
+                endDate: new Date(event.endDate),
+                location: event.location,
+                price: event.price,
+                eventImage: event.eventImage,
+                eventName: event.eventName,
+                attendees: [] // Will be populated when clicked for hosts
+            }));
+        } catch (error) {
+            console.error('Error fetching hosted events:', error);
+            return [];
+        }
+    };
 
     useEffect(() => {
-        setEvents(dummyEvents);
-        setUser(getUserFromCookie());
+        const currentUser = getUserFromCookie();
+        setUser(currentUser);
+        
+        if (!currentUser) {
+            navigate('/');
+            return;
+        }
+
+        const loadEvents = async () => {
+            // Always fetch registered events for all users
+            const registeredEventsList = await fetchRegisteredEvents(currentUser.id);
+            setEvents(registeredEventsList);
+
+            // Only fetch hosted events for admin users
+            if (currentUser.userType === 'admin') {
+                const hostedEventsList = await fetchHostedEvents(currentUser.id);
+                setHostedEvents(hostedEventsList);
+            }
+        };
+
+        loadEvents();
     }, []);
 
-    const onSelectEvent = useCallback(evt => setSelectedEvent(evt), []);
+
+    const onSelectEvent = useCallback((evt) => {
+        setSelectedEvent(evt);
+    }, []);
+
     const handleCloseDialog = () => setSelectedEvent(null);
     const handleViewDetails = () => {
         if (selectedEvent) {
@@ -64,6 +115,17 @@ export default function Profile() {
         }
     };
 
+    useEffect(() => {
+        const handleLogout = () => {
+            navigate('/');
+        };
+
+        window.addEventListener('userLogout', handleLogout);
+
+        return () => window.removeEventListener('userLogout', handleLogout);
+    }, []);
+    console.log(user?.userType);
+    
     return (
         <div className="profile-main-layout">
             {/* User Info */}
@@ -85,10 +147,9 @@ export default function Profile() {
             <div className="profile-tabs-section">
                 <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 2 }}>
                     <Tab label="Upcoming Events" />
-                    <Tab label="Hosted Events" />
+                    {user?.userType === 'admin' && <Tab label="Hosted Events" />}
                     <Tab label="Feedback Form" />
                     <Tab label="Earned Points" />
-
                 </Tabs>
 
                 {tab === 0 && (
@@ -98,10 +159,18 @@ export default function Profile() {
                         primaryColor={PRIMARY_COLOR}
                     />
                 )}
-                {tab === 1 && (
-                    <HostEvents />
+                {tab === 1 && user?.userType === 'admin' && (
+                    <div className="hosted-events-container">
+                        {hostedEvents.length > 0 ? (
+                            <HostEvents events={hostedEvents} />
+                        ) : (
+                            <Typography variant="h6" textAlign="center" sx={{ mt: 4 }}>
+                                No hosted events found
+                            </Typography>
+                        )}
+                    </div>
                 )}
-                {tab === 3 && (
+                {tab === (user?.userType === 'admin' ? 3 : 2) && (
                     <div className='Points'>
                         <h4>Points Earned</h4>
                         <p>You have earned 500 points</p>
@@ -126,7 +195,7 @@ export default function Profile() {
                                         : new Date(selectedEvent.start)
                                 ).toLocaleString()}
                             </Typography>
-                            <Typography>
+                            <Typography gutterBottom>
                                 Ends:{' '}
                                 {(
                                     selectedEvent.end instanceof Date

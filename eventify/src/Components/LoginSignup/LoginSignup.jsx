@@ -4,6 +4,7 @@ import { setCookie } from '../../utils/cookieUtils';
 import { IconButton, InputAdornment } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { toast, ToastContainer } from 'react-toastify';
 
 const initialSignup = {
     firstName: '',
@@ -14,6 +15,7 @@ const initialSignup = {
     phone: '',
     userType: 'user',
 };
+
 const initialLogin = { email: '', password: '' };
 
 export default function LoginSignup({ onAuth }) {
@@ -24,21 +26,30 @@ export default function LoginSignup({ onAuth }) {
     const [showSignupPassword, setShowSignupPassword] = useState(false);
     const [showSignupConfirm, setShowSignupConfirm] = useState(false);
     const [error, setError] = useState('');
-    // Track touched fields
     const [loginTouched, setLoginTouched] = useState({ email: false, password: false });
-    const [signupTouched, setSignupTouched] = useState({ firstName: false, lastName: false, email: false, password: false, confirmPassword: false, phone: false });
+    const [signupTouched, setSignupTouched] = useState({
+        firstName: false,
+        lastName: false,
+        email: false,
+        password: false,
+        confirmPassword: false,
+        phone: false
+    });
 
-    // Validation helpers
     const isEmailValid = email => /.+@.+\..+/.test(email);
     const isPasswordValid = password => password.length >= 6;
     const isLoginValid = loginData.email && loginData.password && isEmailValid(loginData.email);
-    const isSignupValid = Object.values(signupData).every(Boolean) && isEmailValid(signupData.email) && isPasswordValid(signupData.password) && signupData.password === signupData.confirmPassword;
+    const isSignupValid =
+        Object.values(signupData).every(Boolean) &&
+        isEmailValid(signupData.email) &&
+        isPasswordValid(signupData.password) &&
+        signupData.password === signupData.confirmPassword;
 
-    // Field error states
     const loginFieldErrors = {
         email: loginData.email === '' ? 'Email is required.' : (!isEmailValid(loginData.email) ? 'Invalid email.' : ''),
         password: loginData.password === '' ? 'Password is required.' : (!isPasswordValid(loginData.password) ? 'Password must be at least 6 characters.' : ''),
     };
+
     const signupFieldErrors = {
         firstName: signupData.firstName === '' ? 'First name is required.' : '',
         lastName: signupData.lastName === '' ? 'Last name is required.' : '',
@@ -48,52 +59,101 @@ export default function LoginSignup({ onAuth }) {
         phone: signupData.phone === '' ? 'Phone number is required.' : '',
     };
 
-    // Handlers
     const handleLoginChange = e => {
         setLoginData({ ...loginData, [e.target.name]: e.target.value });
         setLoginTouched({ ...loginTouched, [e.target.name]: true });
     };
+
     const handleSignupChange = e => {
         setSignupData({ ...signupData, [e.target.name]: e.target.value });
         setSignupTouched({ ...signupTouched, [e.target.name]: true });
     };
+
     const handleBlurLogin = e => {
         setLoginTouched({ ...loginTouched, [e.target.name]: true });
     };
+
     const handleBlurSignup = e => {
         setSignupTouched({ ...signupTouched, [e.target.name]: true });
     };
 
-    const handleLogin = e => {
+    const handleLogin = async e => {
         e.preventDefault();
-        if (!loginData.email || !loginData.password) return setError('All fields are required.');
-        if (!isEmailValid(loginData.email)) return setError('Please enter a valid email address.');
-        // Mock login: just check if userData cookie matches
-        const userData = JSON.parse(localStorage.getItem('mockUserData') || '{}');
-        if (userData.email === loginData.email && userData.password === loginData.password) {
-            setCookie('isLoggedIN', 'true', 7);
-            setCookie('userData', JSON.stringify(userData), 7);
-            onAuth();
-        } else {
-            setError('Invalid email or password.');
+
+        if (!loginData.email || !loginData.password) {
+            return toast.error('All fields are required.');
+        }
+        if (!isEmailValid(loginData.email)) {
+            return toast.error('Please enter a valid email address.');
+        }
+
+        try {
+            const response = await fetch('http://localhost:5000/api/users/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: loginData.email,
+                    password: loginData.password
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok ) {
+                setCookie('isLoggedIN', 'true', 7);
+                setCookie('userData', JSON.stringify(data.user), 7);
+                toast.success('Login successful!');
+                window.dispatchEvent(new Event('userLogin'));
+                onAuth();
+            } else {
+                toast.error(data.error || 'Login failed.');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            toast.error('Something went wrong. Please try again.');
         }
     };
 
-    const handleSignup = e => {
+    const handleSignup = async e => {
         e.preventDefault();
-        if (!Object.values(signupData).every(Boolean)) return setError('All fields are required.');
-        if (!isEmailValid(signupData.email)) return setError('Please enter a valid email address.');
-        if (signupData.password !== signupData.confirmPassword) return setError('Passwords do not match.');
-        // Mock signup: save to localStorage and cookie
-        const user = { ...signupData };
-        localStorage.setItem('mockUserData', JSON.stringify(user));
-        setCookie('isLoggedIN', 'true', 7);
-        setCookie('userData', JSON.stringify(user), 7);
-        onAuth();
+
+        if (!Object.values(signupData).every(Boolean)) {
+            return toast.error('All fields are required.');
+        }
+        if (!isEmailValid(signupData.email)) {
+            return toast.error('Please enter a valid email address.');
+        }
+        if (signupData.password !== signupData.confirmPassword) {
+            return toast.error('Passwords do not match.');
+        }
+
+        try {
+            const response = await fetch('http://localhost:5000/api/users/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(signupData)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setCookie('isLoggedIN', 'true', 7);
+                setCookie('userData', JSON.stringify(data.user), 7);
+                toast.success('Registration successful!');
+                window.dispatchEvent(new Event('userSignup'));
+                onAuth();
+            } else {
+                toast.error(data.error || 'Registration failed.');
+            }
+        } catch (error) {
+            console.error('Signup error:', error);
+            toast.error('Something went wrong. Please try again.');
+        }
     };
 
     return (
         <div className="login-signup-container">
+            <ToastContainer/>
             {mode === 'login' ? (
                 <form className="login-form" onSubmit={handleLogin}>
                     <h2>Login</h2>
@@ -120,12 +180,7 @@ export default function LoginSignup({ onAuth }) {
                             className={loginFieldErrors.password && loginTouched.password ? 'input-error' : ''}
                         />
                         <InputAdornment position="end">
-                            <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={() => setShowPassword(v => !v)}
-                                edge="end"
-                                size="small"
-                            >
+                            <IconButton onClick={() => setShowPassword(v => !v)} edge="end" size="small">
                                 {showPassword ? <VisibilityOff /> : <Visibility />}
                             </IconButton>
                         </InputAdornment>
@@ -188,12 +243,7 @@ export default function LoginSignup({ onAuth }) {
                             className={signupFieldErrors.password && signupTouched.password ? 'input-error' : ''}
                         />
                         <InputAdornment position="end">
-                            <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={() => setShowSignupPassword(v => !v)}
-                                edge="end"
-                                size="small"
-                            >
+                            <IconButton onClick={() => setShowSignupPassword(v => !v)} edge="end" size="small">
                                 {showSignupPassword ? <VisibilityOff /> : <Visibility />}
                             </IconButton>
                         </InputAdornment>
@@ -211,12 +261,7 @@ export default function LoginSignup({ onAuth }) {
                             className={signupFieldErrors.confirmPassword && signupTouched.confirmPassword ? 'input-error' : ''}
                         />
                         <InputAdornment position="end">
-                            <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={() => setShowSignupConfirm(v => !v)}
-                                edge="end"
-                                size="small"
-                            >
+                            <IconButton onClick={() => setShowSignupConfirm(v => !v)} edge="end" size="small">
                                 {showSignupConfirm ? <VisibilityOff /> : <Visibility />}
                             </IconButton>
                         </InputAdornment>
@@ -242,7 +287,7 @@ export default function LoginSignup({ onAuth }) {
                             onChange={handleSignupChange}
                             required
                         >
-                            <option value="user">Attendee</option>
+                            <option value="attendee">Attendee</option>
                             <option value="admin">Host</option>
                         </select>
                     </div>
@@ -256,4 +301,4 @@ export default function LoginSignup({ onAuth }) {
             )}
         </div>
     );
-} 
+}

@@ -1,34 +1,55 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import EventCard from '../EventCard/EventCard';
 import { Events as Categories } from '../../Data/Enums';
 import './BrowseEvents.css';
-import { dummyEvents } from '../../Data/events';
-
 
 export default function BrowseEvents() {
+    const [events, setEvents] = useState([]);
     const [category, setCategory] = useState('');
     const [search, setSearch] = useState('');
     const [sort, setSort] = useState('date');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/events/list');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch events');
+                }
+                const data = await response.json();
+                setEvents(data.events);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchEvents();
+    }, []);
 
     const filteredEvents = useMemo(() => {
-        let events = [...dummyEvents];
+        let filtered = [...events];
         if (category) {
-            events = events.filter(e => e.category === category);
+            filtered = filtered.filter(e => e.category === category);
         }
         if (search) {
-            events = events.filter(e => e.title.toLowerCase().includes(search.toLowerCase()));
+            filtered = filtered.filter(e => e.eventName.toLowerCase().includes(search.toLowerCase()));
         }
         if (sort === 'date') {
-            events.sort((a, b) => new Date(a.date) - new Date(b.date));
+            filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
         } else if (sort === 'name') {
-            events.sort((a, b) => a.title.localeCompare(b.title));
+            filtered.sort((a, b) => a.eventName.localeCompare(b.title));
         }
-        return events;
-    }, [category, search, sort]);
-
+        return filtered;
+    }, [events, category, search, sort]);
+    console.log(events);
     return (
         <div className="browse-events-container">
             <p className="browse-events-title">Browse Events</p>
+
             <div className="browse-events-toolbar">
                 <div className="browse-events-filter">
                     <label htmlFor="category">Category</label>
@@ -43,6 +64,7 @@ export default function BrowseEvents() {
                         ))}
                     </select>
                 </div>
+
                 <div className="browse-events-search">
                     <label htmlFor="search">Search by Name</label>
                     <input
@@ -53,6 +75,7 @@ export default function BrowseEvents() {
                         onChange={e => setSearch(e.target.value)}
                     />
                 </div>
+
                 <div className="browse-events-sort">
                     <label>Sort</label>
                     <div className="sort-buttons">
@@ -73,8 +96,11 @@ export default function BrowseEvents() {
                     </div>
                 </div>
             </div>
+
             <div className="browse-events-grid">
-                {filteredEvents.map(event => (
+                {loading && <p>Loading events...</p>}
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {!loading && !error && filteredEvents.map(event => (
                     <EventCard event={event} key={event.id} />
                 ))}
             </div>

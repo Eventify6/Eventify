@@ -4,6 +4,8 @@ import './EventDetails.css';
 import { FaInstagram, FaFacebook, FaTwitter } from 'react-icons/fa';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { getCookie } from '../../utils/cookieUtils';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Import Swiper 
 import 'swiper/css';
@@ -13,46 +15,14 @@ import { Pagination, Navigation, Autoplay } from 'swiper/modules';
 import { SocialMediaBoostPrices } from '../../Data/Enums';
 import CommentSection from '../../Components/CommentSection/CommentSection';
 
-const dummyEvents = [
-    {
-        id: 4,
-        eventName: 'Masar Egbary Live',
-        eventImage: '/assets/image/masarEgbary.png',
-        startDate: '2024-07-01T19:00',
-        endDate: '2024-07-01T22:00',
-        location: 'Cairo Opera House',
-        description: 'A live concert by Masar Egbary, one of Egypt\'s most popular bands. Enjoy an unforgettable night of music and entertainment.',
-        category: 'Band',
-        isCharged: true,
-        instapay: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-_BK9GurJ4SaUZKwIu65RA4c1JrS6kWkWgQ&s',
-        price: 200,
-        isAttendeeLimit: true,
-        attendeeLimit: 500,
-        isPrivate: false,
-        socialMediaBoost: ['socials', 'Email'],
-        schedule: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-        previousImages: ['/assets/image/sharmoofers.png', '/assets/image/sharmoofers.png'],
-        instagramLink: 'https://instagram.com/masaregbary',
-        facebookLink: 'https://facebook.com/masaregbary',
-        twitterLink: 'https://twitter.com/masaregbary',
-        agreement: true
-    }
-];
-
 export default function EventDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
-    useEffect(() => {
-        if (getCookie('isLoggedIN') !== 'true') {
-            navigate('/');
-            setTimeout(() => {
-                window.dispatchEvent(new Event('open-login-modal'));
-            }, 100);
-        }
-    }, [navigate]);
-    const event = dummyEvents.find(e => e.id === Number(id));
+    const [event, setEvent] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
     const [tab, setTab] = useState(0);
+    const user = getCookie('userData');
     const [cardDetails, setCardDetails] = useState({
         name: '',
         number: '',
@@ -61,6 +31,34 @@ export default function EventDetails() {
     });
     const [paymentSuccessOpen, setPaymentSuccessOpen] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+    useEffect(() => {
+        if (getCookie('isLoggedIN') !== 'true') {
+            navigate('/');
+            setTimeout(() => {
+                window.dispatchEvent(new Event('open-login-modal'));
+            }, 100);
+            return;
+        }
+
+        const fetchEventDetails = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/events/get/${id}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch event details');
+                }
+                const data = await response.json();
+                setEvent(data.event);
+            } catch (error) {
+                toast.error(error.message || 'Error fetching event details');
+                console.error('Error fetching event:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchEventDetails();
+    }, [id, navigate]);
 
     const handleModalOpen = () => {
         setOpen(true);
@@ -80,30 +78,48 @@ export default function EventDetails() {
         setCardDetails({ ...cardDetails, [e.target.name]: e.target.value });
     };
 
-    const handlePayNow = () => {
-        setOpen(false);
-        setPaymentSuccessOpen(true);
-        console.log("Sending reservation details for", {
-            eventName: event.eventName,
-            cardDetails: tab === 0 ? cardDetails : 'Instapay',
-            total: (event.price * 1.1).toFixed(2)
-        });
-    };
+    const handlePayNow = async () => {
+        try {
+            const userData = typeof user === 'string' ? JSON.parse(user) : user;
+            const userId = userData.id;
+            console.log(userId);
+            
+            const response = await fetch('http://localhost:5000/api/events/ticket/purchase', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    event_id: id,
+                    price: event.isCharged ? (event.price * 1.1).toFixed(2) : 0,
+                    transaction_type: tab === 0 ? 'Credit Card' : 'Instapay'
+                })
+            });
 
-    const handleReceiptClose = () => {
-        setReceiptOpen(false);
+            if (!response.ok) {
+                const errorData = await response.json();
+                
+                toast.error(errorData.error);
+                return;
+            }
+
+            setOpen(false);
+            setPaymentSuccessOpen(true);
+        } catch (error) {
+            toast.error(error.message || 'Error creating ticket');
+            console.error('Error creating ticket:', error);
+        }
     };
 
     const handleAddToCalendar = () => {
         setSnackbarOpen(true);
+        handlePayNow()
     };
 
     const handleSnackbarClose = () => {
         setSnackbarOpen(false);
     };
-
-
-    const total = (event?.price || 0);
 
     const dialogStyles = {
         title: { background: '#1c4f33', color: 'white' },
@@ -120,6 +136,15 @@ export default function EventDetails() {
         payButton: { background: '#1c4f33', color: 'white', borderRadius: 2, px: 4, py: 1.5, fontWeight: 600, fontSize: 16 }
     };
 
+    if (loading) {
+        return (
+            <div className='event-details-page-container'>
+                <h2>Loading...</h2>
+            </div>
+        );
+    }
+    console.log(event.previousImages);
+    
     if (!event) {
         return (
             <div className='event-details-page-container'>
@@ -128,11 +153,17 @@ export default function EventDetails() {
             </div>
         );
     }
+    const previousImages = typeof event.previousImages === "string"
+  ? JSON.parse(event.previousImages)
+  : event.previousImages;
 
     return (
         <div className='event-details-page-container'>
+            <ToastContainer position="top-center" autoClose={3000} />
             <div className='event-details-page-container-header'>
-                <img src={event.eventImage} alt={event.eventName} />
+                <div className='imgContainer'>
+                    <img src={event.eventImage} alt={event.eventName} />
+                </div>
                 <div className='event-details-page-container-header-info'>
                     <div className="event-details-page-container-header-info-title-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <h2 style={{ margin: 0 }}>{event.eventName}</h2>
@@ -156,12 +187,16 @@ export default function EventDetails() {
                         {event.twitterLink && <a href={event.twitterLink} target="_blank" rel="noopener noreferrer"><FaTwitter style={{ color: '#1DA1F2', fontSize: '24px' }} /></a>}
                     </div>
                     <p><strong>Price:</strong> {event.isCharged ? `${event.price} EGP` : 'FREE!'}</p>
-                    {event.isCharged && <Button onClick={handleModalOpen} style={{ backgroundColor: '#1c4f33', color: '#fff' }}>Pay Now</Button>}
+                    {event.isCharged ? (
+                        <Button onClick={handleModalOpen} style={{ backgroundColor: '#1c4f33', color: '#fff' }}>Pay Now</Button>
+                    ) : (
+                        <Button onClick={handleAddToCalendar} style={{ backgroundColor: '#1c4f33', color: '#fff' }}>Add to Calendar</Button>
+                    )}
                 </div>
             </div>
 
             <div>
-                {event.previousImages.length > 0 && (
+                { previousImages && previousImages.length > 0 && (
                     <div className="swiper-container">
                         <h4>Previous Event Images</h4>
                         <Swiper
@@ -172,7 +207,7 @@ export default function EventDetails() {
                             loop={true}
                             speed={2500}
                             navigation={true}
-                            freeMode={true}
+                            freeMode={true}         
                             allowTouchMove={false}
                             spaceBetween={36}
                             modules={[Autoplay]}
@@ -182,7 +217,7 @@ export default function EventDetails() {
                             }}
                             className="mySwiper"
                         >
-                            {event.previousImages.map((image, index) => (
+                            {previousImages.map((image, index) => (
                                 <SwiperSlide key={index}><img src={image} alt={`Previous Event ${index}`} /></SwiperSlide>
                             ))}
                         </Swiper>
@@ -231,22 +266,12 @@ export default function EventDetails() {
                 open={paymentSuccessOpen}
                 autoHideDuration={6000}
                 onClose={() => setPaymentSuccessOpen(false)}
-                message="Payment Successful! Reservation confirmed."
-                action={
-                    <Button variant="contained" sx={{ background: '#fff', color: '#1c4f33' }} size="small" onClick={handleAddToCalendar}>
-                        Add to Calendar
-                    </Button>
-                }
+                message="Reservation confirmed and added to Calendar."
+                
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             />
 
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={3000}
-                onClose={handleSnackbarClose}
-                message="Added to calendar!"
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-            />
+            
 
             <CommentSection />
         </div>

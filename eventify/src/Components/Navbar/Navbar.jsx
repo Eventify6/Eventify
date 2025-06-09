@@ -16,9 +16,11 @@ export default function Navbar() {
     const profileRef = useRef(null);
     const [menuWidth, setMenuWidth] = useState(null);
     const menuRef = useRef(null); // New ref for menu to detect outside clicks
+        const userData = getCookie('userData');
 
     useEffect(() => {
-        const userData = getCookie('userData');
+        console.log(userData);
+        
         if (userData) {
             try {
                 setUser(JSON.parse(userData));
@@ -37,7 +39,7 @@ export default function Navbar() {
         document.addEventListener('click', handleClickOutside);
 
         return () => document.removeEventListener('click', handleClickOutside);
-    }, []);
+    }, [userData]);
 
     const handleUserIconClick = () => setModalOpen(true);
     const handleClose = () => setModalOpen(false);
@@ -61,6 +63,8 @@ export default function Navbar() {
     const handleLogout = () => {
         removeCookie('isLoggedIN');
         removeCookie('userData');
+            window.dispatchEvent(new Event('userLogout'));
+
         setUser(null);
         handleMenuClose();
     };

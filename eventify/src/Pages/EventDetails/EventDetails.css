@@ -44,11 +44,13 @@
 }
 
 .event-details-page-container .event-details-page-container-header img {
-    width: 100%;
     border-radius: 8px;
+    width: inherit;
+}
+.event-details-page-container .event-details-page-container-header .imgContainer {
+    width: 100%;
     flex: 2;
 }
-
 .event-details-page-container .event-details-page-container-header-info {
     flex: 3;
 }
