@@ -7,6 +7,8 @@ import CreateEventPage from './Pages/CreateEventPage/CreateEventPage';
 import Events from './Pages/Events/Events';
 import EventDetails from './Pages/EventDetails/EventDetails';
 import Profile from './Pages/Profile/Profile';
+import ProfileCalendar from './Components/Calendar/Calendar';
+import MyCalendar from './Components/Calendar/Calendar';
 
 
 function App() {
@@ -20,6 +22,7 @@ function App() {
         <Route path="/events/:id" element={<EventDetails />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/eventdetails/:id" element={<EventDetails />} />
+        <Route path="/calendar" element={<MyCalendar />} />
       </Routes>
       <Footer />
 

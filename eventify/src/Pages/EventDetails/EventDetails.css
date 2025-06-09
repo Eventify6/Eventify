@@ -110,7 +110,7 @@
 }
 
 /* Button Styling */
-button {
+/* button {
     font-size: 1.2rem;
     padding: 10px 20px;
     border-radius: 8px;
@@ -126,7 +126,7 @@ button:hover {
 
 button:focus {
     outline: none;
-}
+} */
 
 /* Modal Styling */
 .MuiDialog-paper {

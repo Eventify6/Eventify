@@ -1,19 +1,5 @@
 {
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "@fontsource/roboto": "^5.2.5",
-    "@hookform/resolvers": "^5.0.1",
-    "@mui/icons-material": "^7.1.1",
-    "@mui/material": "^7.1.1",
-    "@mui/x-date-pickers": "^8.5.0",
-    "@react-google-maps/api": "^2.20.6",
-    "date-fns": "^4.1.0",
-    "react-big-calendar": "^1.19.2",
-    "react-datepicker": "^8.4.0",
-    "react-hook-form": "^7.57.0",
-    "react-toastify": "^11.0.5",
-    "swiper": "^11.2.8",
-    "yup": "^1.6.1"
+    "react-big-calendar-like-google": "^0.0.3"
   }
 }

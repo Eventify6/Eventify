@@ -1,7 +1,6 @@
 .profile-main-layout {
     display: flex;
     flex-direction: row;
-    width: 100vw;
     min-height: 90vh;
     background: linear-gradient(135deg, #eaeade 0%, #1c4f33 100%);
     padding: 40px 0;
@@ -38,133 +37,18 @@
     height: fit-content;
 }
 
+.profile-tabs-section .MuiTabs-root .Mui-selected {
+    color: #1c4f33 !important;
+    border-color: #1c4f33 !important;
+}
+
+.profile-tabs-section .MuiTabs-root .MuiTabs-indicator {
+    background-color: #1c4f33 !important;
+}
+
 /* Calendar Styles */
 .profile-calendar-tab {
     width: 100%;
     height: 100%;
-}
-
-.rbc-calendar {
-    background: #fff;
-    border-radius: 18px;
-    padding: 16px;
-}
-
-.rbc-month-view {
-    border: none;
-    height: auto !important;
-}
-
-.rbc-month-row {
-    min-height: 80px !important;
-    overflow: visible;
-}
-
-.rbc-header {
-    padding: 4px;
-    font-weight: 600;
-    color: #1c4f33;
-    border: none !important;
-    font-size: 12px;
-}
-
-.rbc-date-cell {
-    padding: 2px;
-    text-align: center;
-}
-
-.rbc-off-range {
-    visibility: hidden;
-}
-
-.rbc-off-range-bg {
-    background: transparent;
-}
-
-/* Custom Date Cell */
-.custom-date-cell {
-    height: 100%;
-    padding: 2px;
-    border-radius: 4px;
-}
-
-.custom-date-cell.has-event {
-    background-color: rgba(28, 79, 51, 0.1);
-}
-
-.date-number {
-    font-weight: 600;
-    margin-bottom: 2px;
-}
-
-.event-indicator {
-    font-size: 10px;
-    line-height: 1.2;
-    white-space: normal;
-    word-break: break-word;
-    color: #1c4f33;
-}
-
-/* Toolbar */
-.rbc-toolbar-custom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    width: 100%;
-    position: relative;
-}
-
-.rbc-toolbar-label-custom {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #1c4f33;
-}
-
-.rbc-btn-prev,
-.rbc-btn-next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #eaeade !important;
-    color: #1c4f33 !important;
-    border-radius: 50%;
-    z-index: 2;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.rbc-btn-prev {
-    left: 0;
-}
-
-.rbc-btn-next {
-    right: 0;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-    .profile-main-layout {
-        flex-direction: column;
-        gap: 16px;
-        padding: 24px 0;
-    }
-
-    .profile-user-info,
-    .profile-tabs-section {
-        margin: 0 16px;
-        padding: 24px 12px;
-        max-width: 100%;
-    }
-
-    .rbc-month-row {
-        min-height: 60px;
-    }
-
-    .event-indicator {
-        font-size: 8px;
-    }
+    overflow: hidden;
 }
