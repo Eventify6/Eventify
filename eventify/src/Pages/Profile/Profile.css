@@ -42,6 +42,10 @@
     border-color: #1c4f33 !important;
 }
 
+.profile-tabs-section .MuiTab-root {
+    flex: 1;
+}
+
 .profile-tabs-section .MuiTabs-root .MuiTabs-indicator {
     background-color: #1c4f33 !important;
 }

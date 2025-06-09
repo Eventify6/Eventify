@@ -1,0 +1,75 @@
+.comment-section-container {
+    margin-top: 32px;
+    padding: 24px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.comment-section-title {
+    margin-bottom: 16px;
+    font-weight: bold;
+    color: #1c4f33;
+    font-size: 1.75rem;
+}
+
+.comment-list {
+    margin-bottom: 24px;
+    padding-left: 0;
+    list-style: none;
+}
+
+.comment-item {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-author {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.comment-text {
+    background-color: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.comment-textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+    box-sizing: border-box;
+    /* To include padding in width */
+}
+
+.comment-submit-button {
+    background: #1c4f33;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: flex-end;
+    font-weight: 600;
+}
+
+.comment-submit-button:hover {
+    background: #153d28;
+}
+
+.comment-divider {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 1rem 0;
+}

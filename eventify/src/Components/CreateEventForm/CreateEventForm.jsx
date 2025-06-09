@@ -530,7 +530,7 @@ export default function CreateEventForm() {
             </Paper>
 
             {/* Success Popup */}
-            <Dialog open={openSuccessPopup} onClose={handleClosePopup}>
+            <Dialog open={openSuccessPopup} onClose={handleClosePopup} classes={{ paper: 'create-event-dialog' }}>
                 <DialogTitle>{submittedData?.eventName} was Created Successfully!</DialogTitle>
                 <DialogContent>
                     <div className="success-popup-content">
@@ -550,7 +550,7 @@ export default function CreateEventForm() {
             </Dialog>
 
             {/* Payment Confirmation Dialog */}
-            <Dialog open={openPaymentDialog} onClose={handleCancelPayment}>
+            <Dialog open={openPaymentDialog} onClose={handleCancelPayment} classes={{ paper: 'create-event-dialog' }}>
                 <DialogTitle>Payment Confirmation</DialogTitle>
                 <DialogContent>
                     <Typography variant="subtitle1">Event Name: {submittedData?.eventName}</Typography>

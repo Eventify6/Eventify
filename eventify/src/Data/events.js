@@ -1,110 +1,101 @@
-export const Events = [
+export const dummyEvents = [
     {
-        'title': 'All Day Event very long title',
-        'bgColor': '#ff7f50',
-        'allDay': true,
-        'start': new Date(2015, 3, 0),
-        'end': new Date(2015, 3, 1)
+        id: 1,
+        title: 'Masar Egbary Live',
+        date: '2024-07-01T19:00',
+        category: 'Band',
+        location: 'Cairo Opera House',
+        price: '200 EGP',
+        image: '/assets/image/masarEgbary.png',
+        customers: [
+            { firstName: 'John', lastName: 'Doe' },
+            { firstName: 'Jane', lastName: 'Smith' },
+            { firstName: 'Peter', lastName: 'Jones' },
+            { firstName: 'Mary', lastName: 'Williams' },
+            { firstName: 'David', lastName: 'Brown' },
+            { firstName: 'Sarah', lastName: 'Davis' },
+        ]
     },
     {
-        'title': 'Long Event',
-        'start': new Date(2015, 3, 7),
-        'end': new Date(2015, 3, 10)
-    },
-
-    {
-        'title': 'DTS STARTS',
-        'bgColor': '#dc143c',
-        'start': new Date(2016, 2, 13, 0, 0, 0),
-        'end': new Date(2016, 2, 20, 0, 0, 0)
-    },
-
-    {
-        'title': 'DTS ENDS',
-        'bgColor': '#ff8c00',
-        'start': new Date(2016, 10, 6, 0, 0, 0),
-        'end': new Date(2016, 10, 13, 0, 0, 0)
-    },
-
-    {
-        'title': 'Some Event',
-        'bgColor': '#9932cc',
-        'start': new Date(2015, 3, 9, 0, 0, 0),
-        'end': new Date(2015, 3, 9, 0, 0, 0)
+        id: 2,
+        title: 'Omar Khairat Concert',
+        date: '2024-07-10T20:00',
+        category: 'Classical',
+        location: 'Alexandria Library',
+        price: '350 EGP',
+        image: '/assets/image/omarKhairat.png',
+        customers: [
+            { firstName: 'Michael', lastName: 'Johnson' },
+            { firstName: 'Emily', lastName: 'Clark' },
+        ]
     },
     {
-        'title': 'Conference',
-        'bgColor': '#e9967a',
-        'start': new Date(2015, 3, 11),
-        'end': new Date(2015, 3, 13),
-        desc: 'Big conference for important people'
+        id: 3,
+        title: 'Wegz Live',
+        date: '2024-07-15T21:00',
+        category: 'Entertainment',
+        location: 'El Sawy Culturewheel',
+        price: '400 EGP',
+        image: '/assets/image/wegz.png',
+        customers: [
+            { firstName: 'Chris', lastName: 'Lee' },
+            { firstName: 'Jessica', lastName: 'Taylor' },
+            { firstName: 'Matthew', lastName: 'Anderson' },
+            { firstName: 'Laura', lastName: 'Thomas' },
+        ]
     },
     {
-        'title': 'Meeting',
-        'bgColor': '#8fbc8f',
-        'start': new Date(2015, 3, 12, 10, 30, 0, 0),
-        'end': new Date(2015, 3, 12, 12, 30, 0, 0),
-        desc: 'Pre-meeting meeting, to prepare for the meeting'
+        id: 4,
+        title: 'AI Workshop',
+        date: '2024-07-05T10:00',
+        category: 'Workshop',
+        location: 'AUC New Cairo',
+        price: 'Free',
+        image: '/assets/image/AI.png',
     },
     {
-        'title': 'Lunch',
-        'bgColor': '#cd5c5c',
-        'start': new Date(2015, 3, 12, 12, 0, 0, 0),
-        'end': new Date(2015, 3, 12, 13, 0, 0, 0),
-        desc: 'Power lunch'
+        id: 5,
+        title: 'Sharmoofers Night',
+        date: '2024-07-20T19:30',
+        category: 'Band',
+        location: 'Zed Park',
+        price: '250 EGP',
+        image: '/assets/image/sharmoofers.png',
     },
     {
-        'title': 'Happy Hour',
-        'start': new Date(2015, 3, 12, 12, 0, 0, 0),
-        'end': new Date(2015, 3, 12, 13, 0, 0, 0),
-        desc: 'Power lunch happy hour'
+        id: 6,
+        title: 'Tamer Ashour Musical',
+        date: '2024-07-18T18:00',
+        category: 'Musical',
+        location: 'Cairo Stadium',
+        price: '300 EGP',
+        image: '/assets/image/tamerAshour.png',
     },
     {
-        'title': 'Meeting',
-        'bgColor': '#da70d6',
-        'start': new Date(2015, 3, 12, 14, 0, 0, 0),
-        'end': new Date(2015, 3, 12, 15, 0, 0, 0)
+        id: 7,
+        title: 'Educational Camp',
+        date: '2024-07-25T09:00',
+        category: 'Camp',
+        location: 'Wadi Degla',
+        price: '150 EGP',
+        image: '/assets/image/celebrate.png',
     },
     {
-        'title': 'Happy Hour',
-        'bgColor': '#eee8aa',
-        'start': new Date(2015, 3, 17, 17, 0, 0, 0),
-        'end': new Date(2015, 3, 17, 17, 30, 0, 0),
-        desc: 'Most important meal of the day'
+        id: 8,
+        title: 'Trips to Fayoum',
+        date: '2024-07-12T07:00',
+        category: 'Trips',
+        location: 'Fayoum',
+        price: '500 EGP',
+        image: '/assets/image/about us.png',
     },
     {
-        'title': 'Dinner',
-        'bgColor': '#98fb98',
-        'start': new Date(2015, 3, 15, 20, 0, 0, 0),
-        'end': new Date(2015, 3, 15, 21, 0, 0, 0)
+        id: 9,
+        title: 'Exhibition: Modern Art',
+        date: '2024-07-22T11:00',
+        category: 'Exhibition',
+        location: 'Gezira Art Center',
+        price: '100 EGP',
+        image: '/assets/image/your-image.jpeg',
     },
-    {
-        'title': 'Birthday Party',
-        'bgColor': '#afeeee',
-        'start': new Date(2015, 3, 13, 7, 0, 0),
-        'end': new Date(2015, 3, 13, 10, 30, 0)
-    },
-    {
-        'title': 'Birthday Party 2',
-        'bgColor': '#db7093',
-        'start': new Date(2015, 3, 13, 7, 0, 0),
-        'end': new Date(2015, 3, 13, 10, 30, 0)
-    },
-    {
-        'title': 'Birthday Party 3',
-        'bgColor': '#cd853f',
-        'start': new Date(2015, 3, 13, 7, 0, 0),
-        'end': new Date(2015, 3, 13, 10, 30, 0)
-    },
-    {
-        'title': 'Late Night Event',
-        'bgColor': '#b0e0e6',
-        'start': new Date(2015, 3, 17, 19, 30, 0),
-        'end': new Date(2015, 3, 18, 2, 0, 0)
-    },
-    {
-        'title': 'Multi-day Event',
-        'start': new Date(2015, 3, 20, 19, 30, 0),
-        'end': new Date(2015, 3, 22, 2, 0, 0)
-    }
-]
+];

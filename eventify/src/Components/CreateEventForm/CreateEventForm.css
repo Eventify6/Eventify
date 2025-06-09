@@ -9,7 +9,7 @@
     background: linear-gradient(135deg, #1c4f33 0%, #eaeade 100%);
 }
 
-h2 {
+.create-event-form-container h2 {
     color: #1c4f33;
 }
 
@@ -25,6 +25,7 @@ h2 {
     backdrop-filter: blur(8px) saturate(1.2);
     transition: box-shadow 0.35s cubic-bezier(.4, 2, .6, 1);
     font-family: 'Arial', sans-serif;
+    width: 100%;
 }
 
 /* Inputs with no borders and box-shadow on active */
@@ -170,7 +171,7 @@ h2 {
 }
 
 /* --- MODERN MODAL STYLES --- */
-.MuiDialog-paper {
+.create-event-dialog {
     border-radius: 22px !important;
     background: rgba(255, 255, 255, 0.92) !important;
     box-shadow: 0 8px 40px 0 rgba(28, 79, 51, 0.22), 0 1.5px 8px 0 rgba(28, 79, 51, 0.08) !important;
@@ -181,7 +182,7 @@ h2 {
     margin: 0 auto;
 }
 
-.MuiDialogTitle-root {
+.create-event-dialog .MuiDialogTitle-root {
     font-size: 2rem !important;
     font-weight: 700 !important;
     color: #1c4f33 !important;
@@ -190,7 +191,7 @@ h2 {
     text-align: center;
 }
 
-.MuiDialogContent-root {
+.create-event-dialog .MuiDialogContent-root {
     padding: 28px 32px 12px 32px !important;
     display: flex;
     flex-direction: column;
@@ -199,14 +200,14 @@ h2 {
     overflow-x: hidden;
 }
 
-.MuiDialogActions-root {
+.create-event-dialog .MuiDialogActions-root {
     padding: 24px 32px 32px 32px !important;
     display: flex;
     justify-content: center;
     gap: 18px;
 }
 
-.success-popup-content {
+.create-event-dialog .success-popup-content {
     background: rgba(245, 255, 250, 0.95);
     border-radius: 16px;
     box-shadow: 0 2px 12px rgba(28, 79, 51, 0.08);
@@ -219,52 +220,52 @@ h2 {
     gap: 8px;
 }
 
-.success-popup-content .MuiTypography-subtitle1 {
+.create-event-dialog .success-popup-content .MuiTypography-subtitle1 {
     font-size: 1.13rem;
     font-weight: 500;
     color: #1c4f33;
 }
 
-.success-popup-content .MuiTypography-h6 {
+.create-event-dialog .success-popup-content .MuiTypography-h6 {
     font-size: 1.25rem;
     font-weight: 700;
     color: #0e2d1b;
 }
 
-.success-popup-content .MuiTypography-subtitle2 {
+.create-event-dialog .success-popup-content .MuiTypography-subtitle2 {
     font-size: 1.05rem;
     color: #2e7d32;
     font-weight: 500;
 }
 
-.MuiDialogContent-root .MuiTypography-root {
+.create-event-dialog .MuiDialogContent-root .MuiTypography-root {
     text-align: center;
     width: 100%;
 }
 
 @media (max-width: 600px) {
-    .MuiDialog-paper {
+    .create-event-dialog {
         max-width: 98vw;
         padding: 0 !important;
     }
 
-    .MuiDialogTitle-root,
-    .MuiDialogContent-root,
-    .MuiDialogActions-root {
+    .create-event-dialog .MuiDialogTitle-root,
+    .create-event-dialog .MuiDialogContent-root,
+    .create-event-dialog .MuiDialogActions-root {
         padding-left: 12px !important;
         padding-right: 12px !important;
     }
 
-    .MuiDialogTitle-root {
+    .create-event-dialog .MuiDialogTitle-root {
         font-size: 1.3rem !important;
     }
 
-    .MuiDialogContent-root {
+    .create-event-dialog .MuiDialogContent-root {
         padding-top: 18px !important;
         padding-bottom: 8px !important;
     }
 
-    .MuiDialogActions-root {
+    .create-event-dialog .MuiDialogActions-root {
         padding-bottom: 18px !important;
         padding-top: 12px !important;
     }

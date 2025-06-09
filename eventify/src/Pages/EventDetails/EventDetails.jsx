@@ -11,6 +11,7 @@ import 'swiper/css/pagination';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Tabs, Tab, TextField, Snackbar, Typography, Box } from '@mui/material';
 import { Pagination, Navigation, Autoplay } from 'swiper/modules';
 import { SocialMediaBoostPrices } from '../../Data/Enums';
+import CommentSection from '../../Components/CommentSection/CommentSection';
 
 const dummyEvents = [
     {
@@ -58,7 +59,7 @@ export default function EventDetails() {
         expiry: '',
         cvv: ''
     });
-    const [receiptOpen, setReceiptOpen] = useState(false);
+    const [paymentSuccessOpen, setPaymentSuccessOpen] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
 
     const handleModalOpen = () => {
@@ -81,7 +82,12 @@ export default function EventDetails() {
 
     const handlePayNow = () => {
         setOpen(false);
-        setReceiptOpen(true);
+        setPaymentSuccessOpen(true);
+        console.log("Sending reservation details for", {
+            eventName: event.eventName,
+            cardDetails: tab === 0 ? cardDetails : 'Instapay',
+            total: (event.price * 1.1).toFixed(2)
+        });
     };
 
     const handleReceiptClose = () => {
@@ -98,6 +104,21 @@ export default function EventDetails() {
 
 
     const total = (event?.price || 0);
+
+    const dialogStyles = {
+        title: { background: '#1c4f33', color: 'white' },
+        content: { display: 'flex', flexDirection: 'column', justifyContent: 'center', p: 3 },
+        orderSummary: { mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' },
+        orderSummaryTitle: { mb: 1, fontWeight: 'bold' },
+        siteServices: { mt: 1 },
+        totalPrice: { mt: 1, fontWeight: 'bold', color: '#1c4f33' },
+        tabs: { marginBottom: 2 },
+        creditCardForm: { display: 'flex', flexDirection: 'column', gap: 2, mt: 2 },
+        creditCardFields: { display: 'flex', gap: 2 },
+        instapaySection: { display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 },
+        actions: { justifyContent: 'center', pb: 2 },
+        payButton: { background: '#1c4f33', color: 'white', borderRadius: 2, px: 4, py: 1.5, fontWeight: 600, fontSize: 16 }
+    };
 
     if (!event) {
         return (
@@ -170,51 +191,54 @@ export default function EventDetails() {
                 <p><strong>Schedule:</strong> <a href={event.schedule} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}><button style={{ backgroundColor: '#1c4f33', color: 'whitesmoke', border: 'none', borderRadius: '8px', padding: '10px 20px', cursor: 'pointer' }}>Download Schedule</button></a></p>
             </div>
 
-            <Dialog open={open} onClose={handleModalClose} maxWidth="xs" fullWidth>
-                <DialogTitle sx={{ background: '#1c4f33', color: 'white' }}>Pay for Event</DialogTitle>
-                <DialogContent sx={{ minHeight: 320, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <Tabs value={tab} onChange={handleTabChange} centered sx={{ marginBottom: 2 }}>
+            <Dialog open={open} onClose={handleModalClose} maxWidth="xs" fullWidth PaperProps={{ className: 'payment-dialog' }}>
+                <DialogTitle className="payment-dialog-title" sx={dialogStyles.title}>Pay for Event</DialogTitle>
+                <DialogContent className="payment-dialog-content" sx={dialogStyles.content}>
+                    <Box className="order-summary" sx={dialogStyles.orderSummary}>
+                        <Typography variant="h6" sx={dialogStyles.orderSummaryTitle}>Order Summary</Typography>
+                        <Typography><strong>Event:</strong> {event.eventName}</Typography>
+                        <Typography><strong>Base Price:</strong> {event.price.toFixed(2)} EGP</Typography>
+                        <Typography sx={dialogStyles.siteServices}><strong>Site Services (10%):</strong> {(event.price * 0.1).toFixed(2)} EGP</Typography>
+                        <Typography sx={dialogStyles.totalPrice}><strong>Total:</strong> {(event.price * 1.1).toFixed(2)} EGP</Typography>
+                    </Box>
+                    <Tabs value={tab} onChange={handleTabChange} centered sx={dialogStyles.tabs} className="payment-tabs">
                         <Tab label="Credit Card" />
                         <Tab label="Instapay" />
                     </Tabs>
                     {tab === 0 && (
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+                        <Box className="credit-card-form" sx={dialogStyles.creditCardForm}>
                             <TextField label="Cardholder Name" name="name" value={cardDetails.name} onChange={handleCardInput} variant="outlined" fullWidth />
                             <TextField label="Card Number" name="number" value={cardDetails.number} onChange={handleCardInput} variant="outlined" fullWidth />
-                            <Box sx={{ display: 'flex', gap: 2 }}>
+                            <Box className="credit-card-fields" sx={dialogStyles.creditCardFields}>
                                 <TextField label="Expiry Date" name="expiry" value={cardDetails.expiry} onChange={handleCardInput} variant="outlined" fullWidth />
                                 <TextField label="CVV" name="cvv" value={cardDetails.cvv} onChange={handleCardInput} variant="outlined" fullWidth />
                             </Box>
                         </Box>
                     )}
                     {tab === 1 && (
-                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 }}>
+                        <Box className="instapay-section" sx={dialogStyles.instapaySection}>
                             <img src={event.instapay} alt="Instapay QR" style={{ width: 180, marginBottom: 16, borderRadius: 8 }} />
                         </Box>
                     )}
                 </DialogContent>
-                <DialogActions sx={{ justifyContent: 'center', pb: 2 }}>
-                    <Button onClick={handlePayNow} variant="contained" sx={{ background: '#1c4f33', color: 'white', borderRadius: 2, px: 4, py: 1.5, fontWeight: 600, fontSize: 16 }}>Pay Now</Button>
+                <DialogActions className="payment-dialog-actions" sx={dialogStyles.actions}>
+                    <Button onClick={handlePayNow} variant="contained" sx={dialogStyles.payButton}>Pay Now</Button>
                     <Button onClick={handleModalClose} color="primary">Close</Button>
                 </DialogActions>
             </Dialog>
 
-            <Dialog open={receiptOpen} onClose={handleReceiptClose} maxWidth="xs" fullWidth>
-                <DialogTitle sx={{ background: '#1c4f33', color: 'white' }}>Payment Receipt</DialogTitle>
-                <DialogContent>
-                    <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>Payment Details</Typography>
-                    <Box sx={{ mb: 2 }}>
-                        <Typography><strong>Event:</strong> {event.eventName}</Typography>
-                        <Typography><strong>Base Price:</strong> {event.price} EGP</Typography>
-                        <Typography sx={{ mt: 1 }}><strong>Site Services:</strong> {total * 0.1} EGP</Typography>
-                        <Typography sx={{ mt: 1 }}><strong>Total:</strong> {total + total * 0.1} EGP</Typography>
-                    </Box>
-                </DialogContent>
-                <DialogActions sx={{ justifyContent: 'center', pb: 2 }}>
-                    <Button onClick={handleAddToCalendar} variant="contained" sx={{ background: '#1c4f33', color: 'white', borderRadius: 2, px: 4, py: 1.5, fontWeight: 600, fontSize: 16 }}>Add to Calendar</Button>
-                    <Button onClick={handleReceiptClose} color="primary">Close</Button>
-                </DialogActions>
-            </Dialog>
+            <Snackbar
+                open={paymentSuccessOpen}
+                autoHideDuration={6000}
+                onClose={() => setPaymentSuccessOpen(false)}
+                message="Payment Successful! Reservation confirmed."
+                action={
+                    <Button variant="contained" sx={{ background: '#fff', color: '#1c4f33' }} size="small" onClick={handleAddToCalendar}>
+                        Add to Calendar
+                    </Button>
+                }
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            />
 
             <Snackbar
                 open={snackbarOpen}
@@ -223,6 +247,8 @@ export default function EventDetails() {
                 message="Added to calendar!"
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             />
+
+            <CommentSection />
         </div>
     );
 }
