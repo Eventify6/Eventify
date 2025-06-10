@@ -288,7 +288,8 @@ export default function LoginSignup({ onAuth }) {
                             required
                         >
                             <option value="attendee">Attendee</option>
-                            <option value="admin">Host</option>
+                            <option value="host">Host</option>
+                            {/* <option value="admin">Admin</option> */}
                         </select>
                     </div>
                     {error && <div className="form-error">{error}</div>}

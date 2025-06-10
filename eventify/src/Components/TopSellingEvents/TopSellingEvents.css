@@ -1,0 +1,26 @@
+.tickets h2, h3{
+color: #256943;
+}
+
+.top-selling-list {
+    padding: 0 !important;
+}
+
+.top-selling-item {
+    padding: 8px 0 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.top-selling-item:last-child {
+    border-bottom: none;
+}
+
+.category-name {
+    color: #333 !important;
+    font-weight: 500 !important;
+}
+
+.category-revenue {
+    color: #1c4f33 !important;
+    font-weight: 600 !important;
+}

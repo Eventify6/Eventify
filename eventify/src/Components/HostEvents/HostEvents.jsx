@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import React from 'react';
+import { Card, CardContent, CardMedia, Typography, Box, IconButton } from '@mui/material';
+import { MdEdit, MdDelete } from 'react-icons/md';
 import './HostEvents.css';
 import CustomersList from '../CustomersList/CustomersList';
 
-export default function HostEvents({ events }) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState(null);
-    const [customers, setCustomers] = useState([]);
+const HostEvents = ({ events, isAdmin, onEdit, onDelete }) => {
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
+    const [selectedEvent, setSelectedEvent] = React.useState(null);
+    const [customers, setCustomers] = React.useState([]);
     console.log(events);
     
     const fetchCustomers = async (eventId) => {
@@ -38,26 +40,64 @@ export default function HostEvents({ events }) {
 
     return (
         <>
-            {events.length > 0 ? (
-                <div className='eventsContainer'>
-                    {events.map((event) => (
-                        <div className='eventCard' key={event.id} onClick={() => handleOpenModal(event)}>
-                            <img src={event.eventImage} alt={event.eventName} />
-                            <h3>{event.eventName}</h3>
-                            <p>{event.description}</p>
-                            <div className="event-details">
-                                <p>Date: {new Date(event.startDate).toLocaleDateString()}</p>
-                                <p>Location: {event.location}</p>
-                                <p>Price: ${event.price}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                <div className='noEventsContainer'>
-                    <p>No events found</p>
-                </div>
-            )}
+            <div className="hosted-events-grid">
+                {events.map((event) => (
+                    <Card key={event.id} className="hosted-event-card">
+                        <Box sx={{ position: 'relative' }}>
+                            <CardMedia
+                                component="img"
+                                height="140"
+                                image={event.eventImage || 'default-event-image.jpg'}
+                                alt={event.eventName}
+                            />
+                            {isAdmin && (
+                                <Box sx={{
+                                    position: 'absolute',
+                                    top: 8,
+                                    right: 8,
+                                    display: 'flex',
+                                    gap: 1,
+                                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                                    borderRadius: '4px',
+                                    padding: '4px'
+                                }}>
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => onEdit(event.id)}
+                                        sx={{ color: '#1c4f33' }}
+                                    >
+                                        <MdEdit />
+                                    </IconButton>
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => onDelete(event)}
+                                        sx={{ color: '#d32f2f' }}
+                                    >
+                                        <MdDelete />
+                                    </IconButton>
+                                </Box>
+                            )}
+                        </Box>
+                        <CardContent>
+                            <Typography variant="h6" component="div" gutterBottom>
+                                {event.eventName}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" gutterBottom>
+                                Location: {event.location}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" gutterBottom>
+                                Start: {new Date(event.startDate).toLocaleString()}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" gutterBottom>
+                                End: {new Date(event.endDate).toLocaleString()}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                Price: ${event.price}
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
             {isModalOpen && selectedEvent && (
                 <CustomersList
                     customers={customers}
@@ -67,4 +107,6 @@ export default function HostEvents({ events }) {
             )}
         </>
     );
-}
+};
+
+export default HostEvents;

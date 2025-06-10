@@ -170,6 +170,9 @@ export default function CreateEventForm() {
                 }
             });
 
+            // Add eventFee to the form data
+            formData.append('eventFee', submittedData.invoice.total);
+
             // Append files
             if (submittedData.eventImage) {
                 formData.append('eventImage', submittedData.eventImage);

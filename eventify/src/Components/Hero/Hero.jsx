@@ -21,7 +21,7 @@ export default function Hero() {
         const checkUserType = () => {
             const userData = getCookie('userData');
             const user = userData ? JSON.parse(userData) : null;
-            setIsAdmin(user?.userType === 'admin');
+            setIsAdmin(user?.userType === 'host' || user?.userType === 'admin');
         };
 
         // Initial check

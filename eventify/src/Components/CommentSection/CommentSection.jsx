@@ -1,17 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import './CommentSection.css';
 import { getCookie } from '../../utils/cookieUtils';
-
-const initialComments = [
-    { id: 1, author: 'John Doe', text: 'This was an amazing event! Highly recommend.' },
-    { id: 2, author: 'Jane Smith', text: 'Had a great time. The organization was perfect.' },
-];
+import { toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
 
 const CommentSection = () => {
-    const [comments, setComments] = useState(initialComments);
+    const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState(null);
+    const { id: eventId } = useParams();
+
+    const fetchComments = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/events/${eventId}/comments`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch comments');
+            }
+            const data = await response.json();
+            setComments(data.comments);
+        } catch (error) {
+            toast.error(error.message || 'Error fetching comments');
+            console.error('Error fetching comments:', error);
+        }
+    };
 
     useEffect(() => {
         // Determine login status
@@ -23,8 +35,6 @@ const CommentSection = () => {
 
         if (rawUserData) {
             try {
-                // If you url-encoded it when setting the cookie, decode first:
-                // const decoded = decodeURIComponent(rawUserData);
                 parsedUserData = JSON.parse(rawUserData);
             } catch (err) {
                 console.error('Failed to parse userData cookie:', err);
@@ -33,27 +43,43 @@ const CommentSection = () => {
 
         setIsLoggedIn(loggedInStatus);
         setUserData(parsedUserData);
-    }, []);
+
+        // Fetch comments when component mounts
+        fetchComments();
+    }, [eventId]);
 
     const handleCommentChange = (e) => {
         setNewComment(e.target.value);
     };
 
-    const handleCommentSubmit = () => {
-        if (!newComment.trim()) return;
+    const handleCommentSubmit = async () => {
+        if (!newComment.trim() || !isLoggedIn || !userData) return;
 
-        const authorName = isLoggedIn && userData
-            ? `${userData.firstName} ${userData.lastName}`
-            : 'New User';
+        try {
+            const response = await fetch(`http://localhost:5000/api/events/${eventId}/comments`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: userData.id,
+                    content: newComment.trim()
+                })
+            });
 
-        const newCommentObject = {
-            id: comments.length + 1,
-            author: authorName,
-            text: newComment.trim(),
-        };
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to post comment');
+            }
 
-        setComments(prev => [...prev, newCommentObject]);
-        setNewComment('');
+            // Refresh comments after posting
+            await fetchComments();
+            setNewComment('');
+            toast.success('Comment posted successfully!');
+        } catch (error) {
+            toast.error(error.message || 'Error posting comment');
+            console.error('Error posting comment:', error);
+        }
     };
 
     return (
@@ -65,36 +91,43 @@ const CommentSection = () => {
                     <React.Fragment key={comment.id}>
                         <li className="comment-item">
                             <div className="comment-author">
-                                <strong>{comment.author}</strong>
+                                <strong>{comment.user.firstName} {comment.user.lastName}</strong>
                             </div>
-                            <p className="comment-text">{comment.text}</p>
+                            <p className="comment-text">{comment.content}</p>
+                            <small className="comment-date">
+                                {new Date(comment.created_at).toLocaleString()}
+                            </small>
                         </li>
                         {idx < comments.length - 1 && <hr className="comment-divider" />}
                     </React.Fragment>
                 ))}
             </ul>
 
-            <form
-                className="comment-form"
-                noValidate
-                autoComplete="off"
-                onSubmit={e => { e.preventDefault(); handleCommentSubmit(); }}
-            >
-                <textarea
-                    className="comment-textarea"
-                    placeholder="Write a comment..."
-                    rows={4}
-                    value={newComment}
-                    onChange={handleCommentChange}
-                />
-                <button
-                    type="button"
-                    className="comment-submit-button"
-                    onClick={handleCommentSubmit}
+            {isLoggedIn ? (
+                <form
+                    className="comment-form"
+                    noValidate
+                    autoComplete="off"
+                    onSubmit={e => { e.preventDefault(); handleCommentSubmit(); }}
                 >
-                    Submit Comment
-                </button>
-            </form>
+                    <textarea
+                        className="comment-textarea"
+                        placeholder="Write a comment..."
+                        rows={4}
+                        value={newComment}
+                        onChange={handleCommentChange}
+                    />
+                    <button
+                        type="button"
+                        className="comment-submit-button"
+                        onClick={handleCommentSubmit}
+                    >
+                        Submit Comment
+                    </button>
+                </form>
+            ) : (
+                <p className="login-prompt">Please log in to leave a comment.</p>
+            )}
         </div>
     );
 };

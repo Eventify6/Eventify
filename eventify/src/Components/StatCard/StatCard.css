@@ -1,0 +1,39 @@
+.stat-card {
+    padding: 20px;
+    height: 100%;
+    transition: transform 0.2s ease-in-out;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.stat-icon {
+    background-color: rgba(28, 79, 51, 0.1);
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-info {
+    flex-grow: 1;
+}
+
+.stat-number {
+    font-weight: 600 !important;
+    color: #1c4f33 !important;
+    margin-bottom: 4px !important;
+}
+
+.stat-label {
+    color: #666 !important;
+    font-size: 0.9rem !important;
+} 

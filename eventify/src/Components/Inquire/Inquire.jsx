@@ -25,29 +25,16 @@ export default function Inquire() {
             <form className="inquire-form" onSubmit={handleSubmit} autoComplete="off">
                 <h2 className="inquire-title">Stay in the Loop!</h2>
                 <div className="input-group">
-                    <input
-                        type="email"
-                        className={`inquire-input${touched && !isValidEmail(email) ? ' invalid' : ''}`}
-                        placeholder="Enter your email"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        onBlur={() => setTouched(true)}
-                        required
-                    />
-                    <button
-                        type="submit"
-                        className="inquire-btn"
-                        disabled={!isValidEmail(email)}
+                  
+                    <h4>If you have any inquiries don't hesitate to contact us!</h4>
+                    <a
+                    href="mailto:eventify66@gmail.com?subject=Inquiry from User"
+                    className="inquire-btn"
                     >
-                        Subscribe
-                    </button>
+                    Email
+                    </a>
                 </div>
-                {touched && !isValidEmail(email) && (
-                    <span className="error-msg">Please enter a valid email address.</span>
-                )}
-                {subscribed && (
-                    <span className="success-msg">Thank you for subscribing!</span>
-                )}
+            
             </form>
         </section>
     );

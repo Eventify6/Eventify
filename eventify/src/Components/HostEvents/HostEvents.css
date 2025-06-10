@@ -1,3 +1,27 @@
+.hosted-events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    padding: 24px;
+}
+
+.hosted-event-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.hosted-event-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.hosted-event-card .MuiCardMedia-root {
+    object-fit: cover;
+}
+
+.hosted-event-card .MuiCardContent-root {
+    padding: 16px;
+}
+
 .eventsContainer {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

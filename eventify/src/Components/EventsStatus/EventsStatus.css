@@ -1,0 +1,66 @@
+.events-status-card {
+    padding: 20px;
+    height: 100%;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.events-status-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Animation for loading numbers */
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.events-status-card .MuiTypography-h4 {
+    animation: countUp 0.5s ease-out forwards;
+}
+
+.events-status {
+    padding: 20px !important;
+}
+
+.status-item {
+    margin: 20px 0;
+}
+
+.status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.private-progress {
+    height: 8px !important;
+    border-radius: 4px !important;
+    background-color: rgba(28, 79, 51, 0.1) !important;
+}
+
+.private-progress .MuiLinearProgress-bar {
+    background-color: #1c4f33 !important;
+}
+
+.public-progress {
+    height: 8px !important;
+    border-radius: 4px !important;
+    background-color: rgba(28, 79, 51, 0.1) !important;
+}
+
+.public-progress .MuiLinearProgress-bar {
+    background-color: #256943 !important;
+}
+
+.total-events {
+    margin-top: 16px;
+    text-align: right;
+} 

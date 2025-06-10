@@ -12,5 +12,6 @@ body {
     margin: 0;
     background-color: white !important;
     padding: 0;
+    color: unset;
 
 }
